@@ -31,16 +31,14 @@ app.get('/strings/first-characters/:string', (req, res) => {
 
 // numbers
 app.get('/numbers/add/:a/and/:b', (req, res) => {
-  const a = parseInt(req.params.a, 10);
-  const b = parseInt(req.params.b, 10);
+  const a = parseInt(req.params.a);
+  const b = parseInt(req.params.b);
   if (Number.isNaN(a) || Number.isNaN(b)) {
     res.status(400).send({ error: 'Parameters must be valid numbers.' });
   } else {
     res.status(200).send({ result: add(a, b) });
 }
 });
-
-
 
 
 
