@@ -1,14 +1,14 @@
 const express = require('express');
 
 const { sayHello, uppercase, lowercase, firstCharacter, firstCharacters } = require('./lib/strings');
-
+const { add, subtract, multiply, divide, power, round, roundUp, roundDown, absolute, quotient, remainder } = require('./lib/numbers'); 
 
 
 
 
 const app = express();
 
-
+// strings
 app.get('/strings/hello/:string', (req, res) => {
   res.status(200).json({ result: sayHello(req.params.string) });
 });
@@ -27,5 +27,22 @@ app.get('/strings/first-characters/:string', (req, res) => {
   }
   res.status(200).send({ result: firstCharacters(req.params.string, req.query.length) });
 });
+
+
+// numbers
+app.get('/numbers/add/:a/and/:b', (req, res) => {
+  const a = parseInt(req.params.a, 10);
+  const b = parseInt(req.params.b, 10);
+  if (Number.isNaN(a) || Number.isNaN(b)) {
+    res.status(400).send({ error: 'Parameters must be valid numbers.' });
+  } else {
+    res.status(200).send({ result: add(a, b) });
+}
+});
+
+
+
+
+
 
 module.exports = app;
