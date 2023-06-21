@@ -40,6 +40,13 @@ app.get('/numbers/add/:a/and/:b', (req, res) => {
 }
 });
 
+app.get('/numbers/subtract/:b/from/:a', (req, res) => {
+  const a = parseInt(req.params.a, 10);
+  const b = parseInt(req.params.b, 10);
+  return Number.isNaN(a) || Number.isNaN(b)
+    ? res.status(400).json({ error: 'Parameters must be valid numbers.' })
+    : res.status(200).json({ result: subtract(a, b) });
+});
 
 
 
