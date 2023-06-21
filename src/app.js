@@ -31,8 +31,8 @@ app.get('/strings/first-characters/:string', (req, res) => {
 
 // numbers
 app.get('/numbers/add/:a/and/:b', (req, res) => {
-  const a = parseInt(req.params.a);
-  const b = parseInt(req.params.b);
+  const a = parseInt(req.params.a, 10);
+  const b = parseInt(req.params.b, 10);
   if (Number.isNaN(a) || Number.isNaN(b)) {
     res.status(400).send({ error: 'Parameters must be valid numbers.' });
   } else {
@@ -43,11 +43,27 @@ app.get('/numbers/add/:a/and/:b', (req, res) => {
 app.get('/numbers/subtract/:b/from/:a', (req, res) => {
   const a = parseInt(req.params.a, 10);
   const b = parseInt(req.params.b, 10);
-  return Number.isNaN(a) || Number.isNaN(b)
-    ? res.status(400).json({ error: 'Parameters must be valid numbers.' })
-    : res.status(200).json({ result: subtract(a, b) });
+  if (Number.isNaN(a) || Number.isNaN(b)) {
+   res.status(400).json({ error: 'Parameters must be valid numbers.' })
+  } else {
+    res.status(200).json({ result: subtract(a, b) });
+};
 });
 
+app.post('/numbers/multiply', (req, res) => {
 
+
+  const a = parseInt(req.body.a, 10);
+  const b = parseInt(req.body.b, 10);
+
+if (Number.isNan(a) || Number.isNan(b)) {
+  res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
+}
+if (!a || !b) {
+  res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+}
+
+  res.status(200).json({ result: multiply(a, b) });
+});
 
 module.exports = app;
