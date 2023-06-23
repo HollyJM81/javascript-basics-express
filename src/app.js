@@ -12,15 +12,15 @@ app.use(express.json());
 
 // strings
 app.get('/strings/hello/:string', (req, res) => {
-  res.status(200).json({ result: sayHello(req.params.string) });
+  res.status(200).send({ result: sayHello(req.params.string) });
 });
 
 app.get('/strings/upper/:string', (req, res) => {
-  res.status(200).json({ result: uppercase(req.params.string) });
+  res.status(200).send({ result: uppercase(req.params.string) });
 });
 
 app.get('/strings/lower/:string', (req, res) => {
-  res.status(200).json({ result: lowercase(req.params.string)})
+  res.status(200).send({ result: lowercase(req.params.string)})
 });
 
 app.get('/strings/first-characters/:string', (req, res) => {
@@ -46,9 +46,9 @@ app.get('/numbers/subtract/:b/from/:a', (req, res) => {
   const a = parseInt(req.params.a, 10);
   const b = parseInt(req.params.b, 10);
   if (Number.isNaN(a) || Number.isNaN(b)) {
-   res.status(400).json({ error: 'Parameters must be valid numbers.' })
+   res.status(400).send({ error: 'Parameters must be valid numbers.' })
   } else {
-    res.status(200).json({ result: subtract(a, b) });
+    res.status(200).send({ result: subtract(a, b) });
 };
 });
 
@@ -56,8 +56,6 @@ app.get('/numbers/subtract/:b/from/:a', (req, res) => {
 
 app.post('/numbers/multiply', (req, res) => {
   const { a, b } = req.body;
-  console.log(a);
-  console.log(b);
 if (!a || !b) {
   res.status(400).send({ error: 'Parameters "a" and "b" are required.' });
 }
@@ -65,6 +63,26 @@ if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
   res.status(400).send({ error: 'Parameters "a" and "b" must be valid numbers.' });
 }
   res.status(200).send({ result: multiply(a, b) });
+});
+
+
+
+app.post('/numbers/divide', (req, res) => {
+  const { a, b } = req.body;
+  if (a === 0) {
+    return res.status(200).send({ result: 0 });
+  }
+  if (b === 0) {
+    return res.status(400).send({ error: 'Unable to divide by 0.' });
+  }
+  if (!a || !b) {
+    return res.status(400).send({ error: 'Parameters "a" and "b" are required.' });
+  }
+  if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
+    return res.status(400).send({ error: 'Parameters "a" and "b" must be valid numbers.' });
+  }
+
+  res.status(200).send({ result: divide(a, b) });
 });
 
 module.exports = app;
