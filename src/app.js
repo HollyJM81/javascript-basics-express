@@ -8,6 +8,8 @@ const { add, subtract, multiply, divide, power, round, roundUp, roundDown, absol
 
 const app = express();
 
+app.use(express.json());
+
 // strings
 app.get('/strings/hello/:string', (req, res) => {
   res.status(200).json({ result: sayHello(req.params.string) });
@@ -50,20 +52,19 @@ app.get('/numbers/subtract/:b/from/:a', (req, res) => {
 };
 });
 
+
+
 app.post('/numbers/multiply', (req, res) => {
-
-
-  const a = parseInt(req.body.a, 10);
-  const b = parseInt(req.body.b, 10);
-
-if (Number.isNan(a) || Number.isNan(b)) {
-  res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
-}
+  const { a, b } = req.body;
+  console.log(a);
+  console.log(b);
 if (!a || !b) {
-  res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
+  res.status(400).send({ error: 'Parameters "a" and "b" are required.' });
 }
-
-  res.status(200).json({ result: multiply(a, b) });
+if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
+  res.status(400).send({ error: 'Parameters "a" and "b" must be valid numbers.' });
+}
+  res.status(200).send({ result: multiply(a, b) });
 });
 
 module.exports = app;
