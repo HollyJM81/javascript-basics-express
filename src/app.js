@@ -12,17 +12,17 @@ const {
   subtract,
   multiply,
   divide,
-  power,
-  round,
-  roundUp,
-  roundDown,
-  absolute,
-  quotient,
   remainder,
 } = require('./lib/numbers');
 
-const app = express();
+const {
+  negate,
+  truthiness,
+  isOdd,
+  startsWith
+} = require('./lib/booleans');
 
+const app = express();
 app.use(express.json());
 
 // strings
@@ -47,8 +47,8 @@ app.get('/strings/first-characters/:string', (req, res) => {
 
 // numbers
 app.get('/numbers/add/:a/and/:b', (req, res) => {
-  const a = parseInt(req.params.a, 10);
-  const b = parseInt(req.params.b, 10);
+  const a = Number(req.params.a);
+  const b = Number(req.params.b);
   if (Number.isNaN(a) || Number.isNaN(b)) {
     res.status(400).send({ error: 'Parameters must be valid numbers.' });
   } else {
@@ -57,8 +57,8 @@ app.get('/numbers/add/:a/and/:b', (req, res) => {
 });
 
 app.get('/numbers/subtract/:b/from/:a', (req, res) => {
-  const a = parseInt(req.params.a, 10);
-  const b = parseInt(req.params.b, 10);
+  const a = Number(req.params.a);
+  const b = Number(req.params.b);
   if (Number.isNaN(a) || Number.isNaN(b)) {
     res.status(400).send({ error: 'Parameters must be valid numbers.' });
   } else {
@@ -113,4 +113,30 @@ app.post('/numbers/remainder', (req, res) => {
   res.status(200).send({ result: remainder(a, b) });
 });
 
+
+// Booleans
+
+app.post('/booleans/negate', (req, res) => {
+res.status(200).send({ result: negate(req.body.value) })
+});
+
+app.post('/booleans/truthiness', (req, res) => {
+  res.status(200).send({ result: truthiness(req.body.value) });
+});
+
+app.get('/booleans/is-odd/:number', (req, res) => {
+  const realNumber = Number(req.params.number);
+  if (!realNumber) {
+    return res.status(400).json({ error: 'Parameter must be a number.' });
+  }
+  res.status(200).send({ result: isOdd(Number(req.params.number)) })
+});
+
+app.get('/booleans/:string/starts-with/:letter', (req, res) => {
+  const char = req.params.letter;
+  if (char.length > 1) {
+    return res.status(400).send ({ error: 'Parameter "character" must be a single character.'})
+  }
+  res.status(200).send({ result: startsWith(req.params.letter, req.params.string) })
+});
 module.exports = app;
